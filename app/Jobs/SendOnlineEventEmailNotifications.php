@@ -36,8 +36,6 @@ class SendOnlineEventEmailNotifications implements ShouldQueue
             ->startsBetweenNowAndXMinutesBeforeStartTime(15)
             ->get();
 
-        info($onlineEvents);
-
         $onlineEvents->each(function ($onlineEvent) {
             $onlineEvent->email_notifications_sent = true;
             $onlineEvent->save();
