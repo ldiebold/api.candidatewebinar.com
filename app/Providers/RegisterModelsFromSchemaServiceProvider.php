@@ -15,7 +15,7 @@ class RegisterModelsFromSchemaServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $directory = base_path('../orm-classes/src/schemas');
+        $directory = base_path('./orm-classes/src/schemas');
         $scanned_directory = array_diff(scandir($directory), array('..', '.'));
 
         $classNames = collect($scanned_directory)->map(function ($fileName) {
