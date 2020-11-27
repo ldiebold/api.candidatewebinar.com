@@ -54,9 +54,13 @@ class SendCandidateAccountPasswordNotification extends Notification implements S
      */
     public function toMail($notifiable)
     {
+        $name = $this->user->name;
+        $uplineName = $this->upline->name;
+
         return (new MailMessage)
-            ->greeting('Hey ' . $this->user->name . '!')
-            ->line($this->upline->name . ' has invited you to watch one of our upcoming information sessions.')
+            ->subject("Webinar Invite - $name")
+            ->greeting("Hey $name!")
+            ->line("$uplineName has invited you to watch one of our upcoming information sessions.")
             ->line('You can login using the following details...')
             ->line('Email: ' . $this->user->email)
             ->line('Password: ' . $this->password)
