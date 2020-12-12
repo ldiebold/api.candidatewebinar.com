@@ -50,14 +50,15 @@ class CandidateAssignedToOnlineEventNotification extends Notification implements
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->greeting($this->upline->name . " saved you a spot on " . $this->onlineEvent->start_time->format('l jS F'))
-            ->line("You've been invited to Team Pickersgill's Information Session.")
+            ->subject($this->upline->name . ' has secured you an invite to ' . $this->onlineEvent->title)
+            ->greeting($this->upline->name . " secured you a spot on " . $this->onlineEvent->start_time->format('l jS F'))
+            ->line("You've been invited to attend the Candidate Education Session.")
             ->line("START TIME: " . $this->onlineEvent->start_time->format('l jS F') . ".")
             ->line("Please click the button below to test your login.")
             ->action('Login', url(env('EVENT_APP_URL')))
-            ->line("You will recieve a reminder email - with your login link - 15 minutes prior. Be sure to allow yourself adequate space to be there on time.")
+            ->line("You will receive a reminder email - with your login link - 15 minutes prior. Be sure to allow yourself adequate space to be there on time.")
             ->line('Remember to bring a pen and paper so you can write down any questions!')
-            ->salutation('Regards, Team Pickersgill.');
+            ->salutation('Regards, The Events Team.');
     }
 
     /**

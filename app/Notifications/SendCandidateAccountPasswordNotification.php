@@ -60,13 +60,13 @@ class SendCandidateAccountPasswordNotification extends Notification implements S
         return (new MailMessage)
             ->subject("Webinar Invite - $name")
             ->greeting("Hey $name!")
-            ->line("$uplineName has invited you to watch one of our upcoming information sessions.")
+            ->line("$uplineName has registered you to attend one of our upcoming information sessions.")
             ->line('You can login using the following details...')
             ->line('Email: ' . $this->user->email)
             ->line('Password: ' . $this->password)
             ->line('We highly recommend logging in now, just to check that everything is working.')
             ->action('Login', url(env('EVENT_APP_URL')))
-            ->salutation('Regards, Team Pickersgill');
+            ->salutation('Regards, The Events Team');
     }
 
     /**
