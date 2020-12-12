@@ -33,13 +33,6 @@ class CandidateController extends Controller
      */
     public function create(Request $request)
     {
-        $request->merge(['role' => 'candidate']);
-        $request->merge(['upline_id' => $request->user()->id]);
-        $candidate = $request->user()->candidates()->create($request->input());
-        if ($request->has('event_ids')) {
-            $candidate->online_events()->attach($request->event_ids);
-        }
-        return $candidate;
     }
 
     /**
@@ -50,7 +43,13 @@ class CandidateController extends Controller
      */
     public function store(Request $request)
     {
-        return User::create($request->input());
+        $request->merge(['role' => 'candidate']);
+        $request->merge(['upline_id' => $request->user()->id]);
+        $candidate = $request->user()->candidates()->create($request->input());
+        if ($request->has('event_ids')) {
+            $candidate->online_events()->attach($request->event_ids);
+        }
+        return $candidate;
     }
 
     /**

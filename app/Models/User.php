@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
+use Staudenmeir\LaravelAdjacencyList\Eloquent\HasRecursiveRelationships;
 
 class User extends Authenticatable
 {
@@ -19,6 +20,7 @@ class User extends Authenticatable
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasSchema;
+    use HasRecursiveRelationships;
 
     /**
      * The attributes that are mass assignable.
@@ -33,6 +35,17 @@ class User extends Authenticatable
         'upline_id',
         'phone_number'
     ];
+
+    /**
+     * The key used in recursive queries to find
+     * the parent user
+     *
+     * @return string
+     */
+    public function getParentKeyName()
+    {
+        return 'upline_id';
+    }
 
     /**
      * Route notifications for the Nexmo channel.

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class UserController extends Controller
 {
@@ -46,6 +47,11 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|unique:users'
+        ]);
+
         $request->merge(['upline_id' => $request->user()->id]);
         $request->merge(['password' => bcrypt($request->password)]);
         if ($request->role === 'candidate') {
@@ -107,4 +113,47 @@ class UserController extends Controller
         $user->delete();
         return $user;
     }
+
+    /**
+     * Display all of a given users downlines.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function downlines(Request $request)
+    {
+        $user = $request->user();
+
+        if ($user->role === 'candidate') {
+            abort(401);
+        }
+
+        $userWithDescendants = User::select(['id', 'name', 'upline_id', 'role'])
+            ->with('descendantsAndSelf:id,name,depth,path,upline_id,role')
+            ->find($user->id);
+
+        $descendantsArray = $userWithDescendants->descendantsAndSelf->toArray();
+        $tree = buildTree($descendantsArray, $parentId = $user->id);
+
+        $user->children = array_values($tree);
+
+        return $user;
+    }
+}
+
+function buildTree(array &$elements, $parentId = 0)
+{
+    $branch = array();
+
+    foreach ($elements as &$element) {
+
+        if ($element['upline_id'] == $parentId) {
+            $children = array_values(buildTree($elements, $element['id']));
+            if ($children) {
+                $element['children'] = $children;
+            }
+            $branch[$element['id']] = $element;
+            unset($element);
+        }
+    }
+    return $branch;
 }

@@ -28,9 +28,7 @@ class OnlineEvent extends Model
      *
      * @var array
      */
-    protected $hidden = [
-        'email_notifications_sent'
-    ];
+    protected $hidden = [];
 
     protected $casts = [
         'start_time' => 'datetime',

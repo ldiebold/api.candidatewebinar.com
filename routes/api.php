@@ -5,6 +5,7 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\OnlineEventUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['prefix' => 'users'], function () {
+        Route::get('downlines', [UserController::class, 'downlines']);
+    });
+
     Route::resources([
         'online_events' => OnlineEventController::class,
         'users' => UserController::class,
@@ -30,3 +35,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'online_event_users' => OnlineEventUserController::class
     ]);
 });
+
+Broadcast::routes(['middleware' => ['auth:sanctum']]);
