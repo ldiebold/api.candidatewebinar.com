@@ -17,14 +17,14 @@ use Illuminate\Support\Facades\Broadcast;
 //     return (int) $user->id === (int) $id;
 // });
 
-Broadcast::channel('online', function ($user) {
-    if ($user->role === 'candidate') {
-        return false;
+Broadcast::channel('App.Models.User.{upline_id}.Online.Event.{online_event_id}', function ($user, $upline_id, $online_event_id) {
+    if (
+        $user->role !== 'candidate' ||
+        ($user->role === 'candidate' && $user->upline_id == $upline_id)
+    ) {
+        return [
+            'id' => $user->id,
+            'inOnlineEvent' => true
+        ];
     }
-
-    return [
-        'id' => $user->id,
-        'name' => $user->name,
-        'inOnlineEvent' => true
-    ];
 });

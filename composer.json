@@ -24,6 +24,7 @@
         "predis/predis": "^1.1",
         "pusher/pusher-php-server": "~4.0",
         "staudenmeir/laravel-adjacency-list": "^1.0",
+        "tailflow/laravel-orion": "^1.1",
         "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {
