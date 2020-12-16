@@ -33,7 +33,8 @@ class User extends Authenticatable
         'password',
         'role',
         'upline_id',
-        'phone_number'
+        'phone_number',
+        'seen_introduction_video'
     ];
 
     /**
