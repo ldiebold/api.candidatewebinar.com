@@ -53,6 +53,10 @@ class UserPolicy
     {
         $model = User::make(request()->input());
 
+        if ($user->isAdmin() && $model->isIbo()) {
+            return true;
+        }
+
         if ($model->isAdmin() || $model->isSuperAdmin()) {
             return false;
         }
