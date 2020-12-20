@@ -32,7 +32,7 @@ class TutorialVideoPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->role === 'admin';
+        return $user->role === 'admin' || $user->role === 'ibo';
     }
 
     /**
