@@ -81,6 +81,10 @@ class UserPolicy
             return true;
         }
 
+        if ($user->isAdmin() && ($model->role === 'candidate') || $model->role === 'ibo') {
+            return true;
+        }
+
         return false;
     }
 

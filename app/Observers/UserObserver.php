@@ -39,6 +39,9 @@ class UserObserver
     public function deleting(User $user)
     {
         $user->online_events()->detach();
+
+        User::where('upline_id', $user->id)
+            ->update(['upline_id' => null]);
     }
 
     /**

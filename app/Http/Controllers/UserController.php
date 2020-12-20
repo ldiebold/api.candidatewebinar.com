@@ -57,7 +57,7 @@ class UserController extends Controller
 
         $password = Str::random(8);
         $request->merge([
-            'upline_id' => $request->user()->id,
+            'upline_id' => $request->has('upline_id') ? $request->upline_id : $request->user()->id,
             'password' => bcrypt($password)
         ]);
 
