@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\SendCandidateAccountPasswordNotification;
+use App\Notifications\SendFullUserAccountPasswordNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class UserController extends Controller
@@ -52,19 +55,26 @@ class UserController extends Controller
             'email' => 'required|unique:users'
         ]);
 
-        $request->merge(['upline_id' => $request->user()->id]);
-        $request->merge(['password' => bcrypt($request->password)]);
+        $password = Str::random(8);
+        $request->merge([
+            'upline_id' => $request->user()->id,
+            'password' => bcrypt($password)
+        ]);
+
         if ($request->role === 'candidate') {
-            $candidate = $request->user()->candidates()->create($request->input());
-
+            $user = $request->user()->candidates()->create($request->input());
             if ($request->has('event_ids')) {
-                $candidate->online_events()->attach($request->event_ids);
+                $user->online_events()->attach($request->event_ids);
             }
+            $user->notify(new SendCandidateAccountPasswordNotification($user, $password));
 
-            return $candidate;
+            return $user;
         }
 
-        return User::create($request->input());
+        $user = User::create($request->input());
+        $user->notify(new SendFullUserAccountPasswordNotification($user, $password));
+
+        return $user;
     }
 
     /**

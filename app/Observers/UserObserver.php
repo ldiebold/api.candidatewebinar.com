@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\User;
 use Illuminate\Support\Str;
 use App\Notifications\SendCandidateAccountPasswordNotification;
+use App\Notifications\SendFullUserAccountPasswordNotification;
 
 class UserObserver
 {
@@ -16,14 +17,6 @@ class UserObserver
      */
     public function created(User $user)
     {
-        if ($user->isCandidate()) {
-            $password = Str::random(8);
-            $user->password = bcrypt($password);
-            $user->save();
-            $user->notify(new SendCandidateAccountPasswordNotification($user, $password));
-        }
-
-        return $user;
     }
 
     /**

@@ -55,7 +55,7 @@ class CandidateAssignedToOnlineEventNotification extends Notification implements
             ->line("You've been invited to attend the Candidate Education Session.")
             ->line("START TIME: " . $this->onlineEvent->start_time->format('l jS F') . ".")
             ->line("Please click the button below to test your login.")
-            ->action('Login', url(env('EVENT_APP_URL')))
+            ->action('Login', url(env('EVENTS_APP_URL')))
             ->line("You will receive a reminder email - with your login link - 15 minutes prior. Be sure to allow yourself adequate space to be there on time.")
             ->line('Remember to bring a pen and paper so you can write down any questions!')
             ->salutation('Regards, The Events Team.');

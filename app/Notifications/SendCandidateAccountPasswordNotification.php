@@ -39,9 +39,9 @@ class SendCandidateAccountPasswordNotification extends Notification implements S
     {
         $via = ['mail'];
 
-        if ($this->user->phone_number) {
-            array_push($via, 'nexmo');
-        }
+        // if ($this->user->phone_number) {
+        //     array_push($via, 'nexmo');
+        // }
 
         return $via;
     }
@@ -65,7 +65,7 @@ class SendCandidateAccountPasswordNotification extends Notification implements S
             ->line('Email: ' . $this->user->email)
             ->line('Password: ' . $this->password)
             ->line('We highly recommend logging in now, just to check that everything is working.')
-            ->action('Login', url(env('EVENT_APP_URL')))
+            ->action('Login', url(env('EVENTS_APP_URL')))
             ->salutation('Regards, The Events Team');
     }
 
@@ -80,7 +80,7 @@ class SendCandidateAccountPasswordNotification extends Notification implements S
         $recipient =  $this->user;
         $upline =  $this->upline;
         $password =  $this->password;
-        $loginUrl = url(env('EVENT_APP_URL'));
+        $loginUrl = url(env('EVENTS_APP_URL'));
         return (new NexmoMessage)
             ->content("Hey $recipient->name! $upline->name has invited you to an information sessions. To test your login: 1. Go to $loginUrl 2. Enter the email $recipient->email 3. Your password id $password");
     }

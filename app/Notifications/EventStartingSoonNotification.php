@@ -50,7 +50,7 @@ class EventStartingSoonNotification extends Notification
             ->subject("Event starting in $timeUntilStartInMinutes minutes")
             ->greeting($this->onlineEvent->title . " is starting in $timeUntilStartInMinutes minutes")
             ->line('Click the button below to login and get started!')
-            ->action('Notification Action', url(env('EVENT_APP_URL')))
+            ->action('Notification Action', url(env('EVENTS_APP_URL')))
             ->line('See you there!')
             ->salutation('Regards, The Events Team.');
     }
