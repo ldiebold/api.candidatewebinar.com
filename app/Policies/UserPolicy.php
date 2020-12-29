@@ -53,15 +53,11 @@ class UserPolicy
     {
         $model = User::make(request()->input());
 
-        if ($user->isAdmin() && $model->isIbo()) {
+        if ($user->isIbo() && $model->hasUpline($user) && $model->isCandidate()) {
             return true;
         }
 
-        if ($model->isAdmin() || $model->isSuperAdmin()) {
-            return false;
-        }
-
-        if ($user->isIbo() && $model->hasUpline($user) && $model->isCandidate()) {
+        if ($user->isAdmin() && ($model->isCandidate()) || $model->isIbo()) {
             return true;
         }
 
@@ -77,11 +73,11 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
-        if ($user->role === 'ibo' && $model->hasUpline($user) && $model->role === 'candidate') {
+        if ($user->isIbo() && $model->hasUpline($user) && $model->isCandidate()) {
             return true;
         }
 
-        if ($user->isAdmin() && ($model->role === 'candidate') || $model->role === 'ibo') {
+        if ($user->isAdmin() && ($model->isCandidate()) || $model->isIbo()) {
             return true;
         }
 
