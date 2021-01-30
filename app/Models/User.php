@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Traits\HasSchema;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
@@ -30,7 +32,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
         'role',
         'upline_id',
         'phone_number',
@@ -106,13 +107,29 @@ class User extends Authenticatable
             ->withPivot(['id']);
     }
 
-    public function hasDownline(User $user)
+    /**
+     * Check this user has the given user, downline
+     *
+     * @param \App\User|int $user
+     * @return boolean
+     */
+    public function hasDownline($user)
     {
-        return $this->downlines->pluck('id')->contains($user->id);
+        $user = gettype($user) === 'integer' ? User::findOrFail($user) : $user;
+
+        return $this->downlines()->pluck('id')->contains($user->id);
     }
 
+    /**
+     * Check this users upline is the given user
+     *
+     * @param \App\User|int $user
+     * @return boolean
+     */
     public function hasUpline(User $user)
     {
+        $user = gettype($user) === 'integer' ? User::findOrFail($user) : $user;
+
         return $this->upline->id === $user->id;
     }
 
@@ -147,6 +164,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Get all users this user has permission to index
+     *
+     * @return Illuminate\Database\Query\Builder
+     */
+    public function indexableUsers()
+    {
+        $roleScopes = collect([
+            'super admin' => static::query(),
+            'admin' => $this->downlinesAndSelf(),
+            'ibo' => $this->downlinesAndSelf(),
+        ]);
+
+        abort_if(!$roleScopes->has($this->role), 403);
+
+        return $roleScopes[$this->role];
+    }
+
+    /**
      * Check the use is an admin
      *
      * @return boolean
@@ -154,5 +189,38 @@ class User extends Authenticatable
     public function isCandidate()
     {
         return !!($this->role === 'candidate');
+    }
+
+    /**
+     * Get all of this users downlines
+     *
+     * @return \Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\Descendants
+     */
+    public function downlines()
+    {
+        return $this->descendants();
+    }
+
+    /**
+     * Get all of this users downlines and self
+     *
+     * @return \Staudenmeir\LaravelAdjacencyList\Eloquent\Relations\Descendants
+     */
+    public function downlinesAndSelf()
+    {
+        return $this->descendantsAndSelf();
+    }
+
+    /**
+     * Change this users password
+     *
+     * @param string $newPassword
+     * @return \App\Models\User
+     */
+    public function changePassword($newPassword)
+    {
+        $this->password = bcrypt($newPassword);
+        $this->save();
+        return $this;
     }
 }

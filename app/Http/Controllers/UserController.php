@@ -7,7 +7,6 @@ use App\Notifications\SendCandidateAccountPasswordNotification;
 use App\Notifications\SendFullUserAccountPasswordNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
 class UserController extends Controller
 {
@@ -23,7 +22,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query();
+        $query = $request->user()->indexableUsers();
 
         if ($request->has('with.online_events')) {
             $query->with('online_events');
@@ -108,7 +107,32 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        // Handle Password Change
+        if ($request->has('new_password')) {
+            $request->validate([
+                'current_password' => 'password',
+                'new_password' => 'required|confirmed'
+            ]);
+
+            $user->changePassword($request->new_password);
+            return $user;
+        }
+
         $user->update($request->input());
+        return $user;
+    }
+
+    public function updateProfilePhoto(Request $request, User $user)
+    {
+        // Handle Profile Photo Change
+        if ($request->file) {
+            $request->validate([
+                'file' => 'image|max:1024'
+            ]);
+
+            $user->updateProfilePhoto($request->file);
+        }
+
         return $user;
     }
 
