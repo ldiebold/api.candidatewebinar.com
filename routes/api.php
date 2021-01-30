@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'users'], function () {
+        Route::post('update-profile-photo/{user}', [UserController::class, 'updateProfilePhoto']);
         Route::get('downlines', [UserController::class, 'downlines']);
     });
 
