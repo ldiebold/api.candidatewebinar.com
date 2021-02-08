@@ -73,6 +73,10 @@ class UserPolicy
      */
     public function update(User $user, User $model)
     {
+        if ($user->id === $model->id) {
+            return true;
+        }
+
         if ($user->isIbo() && $model->hasUpline($user) && $model->isCandidate()) {
             return true;
         }

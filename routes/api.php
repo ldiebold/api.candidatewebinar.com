@@ -5,6 +5,7 @@ use App\Http\Controllers\CandidateController;
 use App\Http\Controllers\OnlineEventUserController;
 use App\Http\Controllers\TutorialVideoController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\UserFeedbackController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Route;
@@ -35,7 +36,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         'users' => UserController::class,
         'candidates' => CandidateController::class,
         'online_event_users' => OnlineEventUserController::class,
-        'tutorial_videos' => TutorialVideoController::class
+        'tutorial_videos' => TutorialVideoController::class,
+        'user_feedback' => UserFeedbackController::class
     ]);
 });
 

@@ -22,10 +22,13 @@ class OnlineEventController extends Controller
         $role = $request->user()->role;
 
         if ($role === 'candidate') {
-            return $request->user()->online_events;
+            return $request->user()
+                ->online_events()
+                ->where('online_events.archived', false)
+                ->get();
         }
 
-        return OnlineEvent::all();
+        return OnlineEvent::where('online_events.archived', false)->get();
     }
 
     /**

@@ -182,6 +182,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Get this users downline directs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function downlineDirects()
+    {
+        return $this->hasMany(\App\Models\User::class, 'upline_id');
+    }
+
+    /**
      * Check the use is an admin
      *
      * @return boolean

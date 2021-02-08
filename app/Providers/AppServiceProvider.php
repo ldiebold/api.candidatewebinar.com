@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \App\Models\OnlineEventUser::observe(\App\Observers\OnlineEventUserObserver::class);
-        \App\Models\User::observe(\App\Observers\UserObserver::class);
+        // 
     }
 }

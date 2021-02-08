@@ -56,12 +56,13 @@ class UserController extends Controller
 
         $password = Str::random(8);
         $request->merge([
-            'upline_id' => $request->has('upline_id') ? $request->upline_id : $request->user()->id,
-            'password' => bcrypt($password)
+            'upline_id' => $request->has('upline_id') ? $request->upline_id : $request->user()->id
         ]);
 
         if ($request->role === 'candidate') {
-            $user = $request->user()->candidates()->create($request->input());
+            $user = $request->user()->candidates()->make($request->input());
+            $user->password = bcrypt($password);
+            $user->save();
             if ($request->has('event_ids')) {
                 $user->online_events()->attach($request->event_ids);
             }
@@ -70,7 +71,9 @@ class UserController extends Controller
             return $user;
         }
 
-        $user = User::create($request->input());
+        $user = User::make($request->input());
+        $user->password = bcrypt($password);
+        $user->save();
         $user->notify(new SendFullUserAccountPasswordNotification($user, $password));
 
         return $user;
@@ -161,7 +164,7 @@ class UserController extends Controller
             abort(401);
         }
 
-        $userWithDescendants = User::select(['id', 'name', 'upline_id', 'role'])
+        $userWithDescendants = User::query()
             ->with('descendantsAndSelf:id,name,depth,path,upline_id,role')
             ->find($user->id);
 

@@ -40,8 +40,13 @@ class UserObserver
     {
         $user->online_events()->detach();
 
-        User::where('upline_id', $user->id)
-            ->update(['upline_id' => null]);
+        if ($user->upline_id) {
+            $user->downlineDirects()
+                ->update(['upline_id' => $user->upline_id]);
+        } else {
+            $user->downlineDirects()
+                ->update(['upline_id' => null]);
+        }
     }
 
     /**

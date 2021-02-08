@@ -27,6 +27,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->job(new SendOnlineEventEmailNotifications)
             ->everyMinute();
+
+        $schedule->command('online-events:archive-old 60')
+            ->hourly();
     }
 
     /**

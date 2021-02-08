@@ -15,22 +15,29 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         \App\Models\User::factory()->create([
-            'name' => 'Luke Diebold',
-            'email' => 'luke@ldiebold.com',
+            'name' => 'Super Admin',
+            'email' => 'superadmin@example.com',
+            'password' => bcrypt('secretsecret'),
+            'role' => 'super admin'
+        ]);
+
+        \App\Models\User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
             'password' => bcrypt('secretsecret'),
             'role' => 'admin'
         ]);
 
         \App\Models\User::factory()->create([
-            'name' => 'Shannen Higginson',
-            'email' => 'shannenh997@gmail.com',
+            'name' => 'ibo',
+            'email' => 'ibo@example.com',
             'password' => bcrypt('secretsecret'),
             'role' => 'ibo'
         ]);
 
         \App\Models\User::factory()->create([
-            'name' => 'Brian Amberton',
-            'email' => 'brianamberton@gmail.com',
+            'name' => 'Candidate',
+            'email' => 'candidate@example.com',
             'password' => bcrypt('secretsecret'),
             'role' => 'candidate'
         ]);
@@ -39,8 +46,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Information Session',
             'description' => 'Anthony and Tash',
             'start_time' => Carbon::now(),
-            'end_time' => Carbon::now()->addHours(2),
-            'automated' => true
+            'end_time' => Carbon::now()->addHours(2)
         ]);
     }
 }

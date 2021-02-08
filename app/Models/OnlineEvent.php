@@ -20,7 +20,8 @@ class OnlineEvent extends Model
         'automated',
         'hex_color',
         'video_url',
-        'email_notifications_sent'
+        'email_notifications_sent',
+        'archived'
     ];
 
     /**
@@ -32,7 +33,8 @@ class OnlineEvent extends Model
 
     protected $casts = [
         'start_time' => 'datetime',
-        'end_time' => 'datetime'
+        'end_time' => 'datetime',
+        'archived' => 'boolean'
     ];
 
     /**
@@ -43,6 +45,16 @@ class OnlineEvent extends Model
     public function users()
     {
         return $this->belongsToMany(\App\Models\User::class, 'online_event_users');
+    }
+
+    /**
+     * Archive this events
+     *
+     * @return boolean
+     */
+    public function archive()
+    {
+        $this->update(['archived' => true]);
     }
 
     /**
@@ -146,6 +158,11 @@ class OnlineEvent extends Model
     {
         return $query->where('end_time', ">", now()->subMinutes($minutes + 1))
             ->where('end_time', "<", now()->subMinutes($minutes));
+    }
+
+    public function scopeEndedMoreThanXMinutesAgo($query, int $minutes)
+    {
+        return $query->where('end_time', "<", now()->subMinutes($minutes));
     }
 
     /**
