@@ -101,7 +101,7 @@ class UserPolicy
             return false;
         }
 
-        if ($user->isIbo() && $model->hasUpline($user) && $model->role === 'candidate') {
+        if (($user->isIbo() || $user->isAdmin()) && $model->hasUpline($user) && $model->role === 'candidate') {
             return true;
         }
 
