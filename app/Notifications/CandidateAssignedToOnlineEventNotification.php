@@ -54,7 +54,7 @@ class CandidateAssignedToOnlineEventNotification extends Notification implements
     {
         return (new MailMessage)
             ->subject($this->upline->name . ' has secured you an invite to ' . $this->onlineEvent->title)
-            ->greeting($this->upline->name . " secured you a spot on " . $this->startTime->format('l jS F h:i A'))
+            ->greeting($this->upline->name . " secured you a spot on " . $this->startTime->setTimezone('Australia/Perth')->format('l jS F'))
             ->line("You've been invited to attend the Candidate Education Session.")
             ->line("Start Time: ")
             ->line("Perth: " . $this->startTime->setTimezone('Australia/Perth')->format('l jS F h:i A') . ".")
