@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Notifications\SendCandidateAccountPasswordNotification;
 use App\Notifications\SendFullUserAccountPasswordNotification;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -172,6 +173,21 @@ class UserController extends Controller
         $tree = buildTree($descendantsArray, $parentId = $user->id);
 
         $user->children = array_values($tree);
+
+        return $user;
+    }
+
+    public function resendPassword(User $user, Request $request)
+    {
+        $this->authorize('update', $user);
+
+        abort_unless($user->upline, 422, 'the given user must have an upline');
+        abort_unless($user->isCandidate(), 422, 'only candidates can have their password reset');
+
+        $password = Str::random(8);
+        $user->password = bcrypt($password);
+        $user->save();
+        $user->notify(new SendCandidateAccountPasswordNotification($user, $password));
 
         return $user;
     }
