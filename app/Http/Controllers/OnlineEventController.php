@@ -61,6 +61,17 @@ class OnlineEventController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     *
+     * @param  \App\Models\OnlineEvent  $onlineEvent
+     * @return \Illuminate\Http\Response
+     */
+    public function showByUid($onlineEventUid)
+    {
+        return OnlineEvent::where('uid', '=', $onlineEventUid)->firstOrFail();
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\OnlineEvent  $onlineEvent

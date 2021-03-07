@@ -25,6 +25,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+/**
+ * Public Api Routes
+ */
+Route::get('online_events/uid/{uid}', [OnlineEventController::class, 'showByUid']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'users'], function () {
         Route::post('update-profile-photo/{user}', [

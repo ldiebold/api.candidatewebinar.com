@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Models\OnlineEvent;
+use Illuminate\Support\Str;
 
 class OnlineEventObserver
 {
@@ -15,6 +16,17 @@ class OnlineEventObserver
     public function created(OnlineEvent $onlineEvent)
     {
         //
+    }
+
+    /**
+     * Handle the OnlineEvent "created" event.
+     *
+     * @param  \App\Models\OnlineEvent  $onlineEvent
+     * @return void
+     */
+    public function creating(OnlineEvent $onlineEvent)
+    {
+        $onlineEvent->uid = Str::uuid();
     }
 
     /**

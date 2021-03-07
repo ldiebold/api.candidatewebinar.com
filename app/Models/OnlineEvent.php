@@ -21,7 +21,8 @@ class OnlineEvent extends Model
         'hex_color',
         'video_url',
         'email_notifications_sent',
-        'archived'
+        'archived',
+        'uid'
     ];
 
     /**
