@@ -41,7 +41,33 @@ class ArchiveOldOnlineEventsCommand extends Command
         OnlineEvent::endedMoreThanXMinutesAgo($this->argument('minutes'))
             ->get()
             ->each(function (OnlineEvent $onlineEvent) {
+                $this->handleHasRecurrence($onlineEvent);
                 $onlineEvent->archive();
             });
+    }
+
+    /**
+     * Replicate the given OnlineEvent if it has a recurrence value
+     * and set its times based on the value of recurrence
+     *
+     * @param OnlineEvent $onlineEvent
+     * @return void
+     */
+    public function handleHasRecurrence(OnlineEvent $onlineEvent)
+    {
+        $recurrencesMappedToPlural = collect([
+            'daily' => 'days',
+            'weekly' => 'weeks',
+            'fortnightly' => 'fortnights',
+            'monthly' => 'months',
+            'yearly' => 'years'
+        ]);
+
+        if ($onlineEvent->recurrence && $recurrencesMappedToPlural->has($onlineEvent->recurrence)) {
+            $replicatedOnlineEvent = $onlineEvent->replicate();
+            $replicatedOnlineEvent->start_time = $onlineEvent->start_time->add(1, $recurrencesMappedToPlural[$onlineEvent->recurrence]);
+            $replicatedOnlineEvent->end_time = $onlineEvent->end_time->add(1, $recurrencesMappedToPlural[$onlineEvent->recurrence]);
+            $replicatedOnlineEvent->save();
+        }
     }
 }

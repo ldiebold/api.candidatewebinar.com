@@ -22,7 +22,8 @@ class OnlineEvent extends Model
         'video_url',
         'email_notifications_sent',
         'archived',
-        'uid'
+        'uid',
+        'recurrence'
     ];
 
     /**
