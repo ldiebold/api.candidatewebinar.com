@@ -39,6 +39,7 @@ class ArchiveOldOnlineEventsCommand extends Command
     public function handle()
     {
         OnlineEvent::endedMoreThanXMinutesAgo($this->argument('minutes'))
+            ->where('archived', false)
             ->get()
             ->each(function (OnlineEvent $onlineEvent) {
                 $this->handleHasRecurrence($onlineEvent);
