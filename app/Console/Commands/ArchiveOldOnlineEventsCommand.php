@@ -66,6 +66,7 @@ class ArchiveOldOnlineEventsCommand extends Command
 
         if ($onlineEvent->recurrence && $recurrencesMappedToPlural->has($onlineEvent->recurrence)) {
             $replicatedOnlineEvent = $onlineEvent->replicate();
+            $replicatedOnlineEvent->email_notifications_sent = 0;
             $replicatedOnlineEvent->start_time = $onlineEvent->start_time->add(1, $recurrencesMappedToPlural[$onlineEvent->recurrence]);
             $replicatedOnlineEvent->end_time = $onlineEvent->end_time->add(1, $recurrencesMappedToPlural[$onlineEvent->recurrence]);
             $replicatedOnlineEvent->save();
